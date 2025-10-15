@@ -32,7 +32,6 @@ def test_prepare_response_success(mock_open_meteo_response, mocker):
     """
     service = OpenMeteoService(latitude=4.6097, longitude=-74.0817, city="Bogota")
 
-    # We need to patch datetime to control the current hour in the test
     mock_datetime = mocker.patch("app.services.open_meteo.datetime")
     mock_datetime.utcnow.return_value.hour = 10
 
@@ -69,7 +68,6 @@ def test_get_weather_forecast_data_mapping_error(mock_open_meteo_response, mocke
     """
     Tests the handling of a data mapping error (KeyError) when the API response is malformed.
     """
-    # Simulate a malformed response by removing a required key
     del mock_open_meteo_response["hourly"]
 
     service = OpenMeteoService(latitude=4.6097, longitude=-74.0817)

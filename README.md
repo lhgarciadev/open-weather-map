@@ -8,7 +8,7 @@ This project uses [uv](https://github.com/astral-sh/uv) as a package manager.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/open-weather-map.git
+    git clone https://github.com/lhgarciadev/open-weather-map.git
     cd open-weather-map
     ```
 
@@ -22,7 +22,7 @@ This project uses [uv](https://github.com/astral-sh/uv) as a package manager.
 To run the application, use the following command:
 
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 The application will be available at `http://127.0.0.1:8000`.
