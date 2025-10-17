@@ -14,22 +14,108 @@ This project uses [uv](https://github.com/astral-sh/uv) as a package manager.
 
 2.  **Install dependencies:**
     ```bash
-    uv sync
+    make install
     ```
+
+## Project Structure
+
+This project is structured following the best practices recommended by FastAPI for building larger, scalable applications. This modular approach helps in separating concerns and makes the codebase easier to maintain and extend.
+
+```
+open-weather-map/
+├── app/
+│   ├── __init__.py
+│   ├── main.py                    # Crea e instancia la aplicación FastAPI
+│   │
+│   ├── models/                    # Pydantic models (schemas)
+│   │   ├── __init__.py
+│   │   └── weather.py             # Modelos WeatherRequest y WeatherResponse
+│   │
+│   ├── routers/                   # Rutas agrupadas por funcionalidad
+│   │   ├── __init__.py
+│   │   └── weather.py             # Endpoint /weather/forecast
+│   │
+│   ├── services/                  # Lógica de negocio o integración externa
+│   │   ├── __init__.py
+│   │   └── open_meteo.py          # Cliente HTTP hacia Open-Meteo API
+│   │
+│   └── core/                      # Infraestructura y base
+│       ├── __init__.py
+│       ├── config.py              # Configuración (variables de entorno, URLs, etc.)
+│       ├── exceptions.py          # Manejo centralizado de errores
+│       └── logging_config.py      # Configuración de logs
+│
+├── tests/
+│   ├── routers/
+│   │   └── test_weather.py        # Testea el endpoint FastAPI
+│   ├── services/
+│   │   └── test_open_meteo.py     # Testea la integración con la API externa
+│   └── test_main.py               # Smoke test de la app
+```
+
+### Component Breakdown
+
+*   **`app/main.py`**: The main entry point that initializes the FastAPI application and includes all the necessary components like routers and exception handlers.
+*   **`app/core/`**: Contains all the cross-cutting concerns and core infrastructure.
+    *   `config.py`: Manages application settings and environment variables.
+    *   `exceptions.py`: Defines custom application-specific exceptions.
+    *   `logging_config.py`: Configures logging for the entire application.
+*   **`app/models/`**: Defines the Pydantic models that determine the data shape (schema) for API requests and responses.
+*   **`app/routers/`**: Contains the API endpoints. Each file groups related routes, which are then included in the main application.
+*   **`app/services/`**: Holds the business logic. In this case, it contains the logic for interacting with the external Open-Meteo API.
+*   **`tests/`**: Contains all the tests, mirroring the application's structure to ensure code quality and correctness.
 
 ## Running the Application
 
-To run the application, use the following command:
+This project uses a `Makefile` to simplify common tasks.
+
+### Local Development
+
+To run the application in development mode (with hot-reloading and API docs):
 
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+make run-dev
+```
+
+### Local Production
+
+To run the application in production mode (no hot-reloading, no API docs):
+
+```bash
+make run-pro
 ```
 
 The application will be available at `http://127.0.0.1:8000`.
 
+## Running with Docker
+
+### Build the Image
+
+First, build the Docker image using the provided `Makefile` command:
+
+```bash
+make docker-build
+```
+
+### Run in Production Mode
+
+To run the container in production mode (recommended for deployment):
+
+```bash
+make docker-run-pro
+```
+
+### Run in Development Mode
+
+To run the container in development mode, which mounts the local `app` directory for hot-reloading:
+
+```bash
+make docker-run-dev
+```
+
 ## API Endpoint
 
-### GET /weather
+### GET /api/v1/weather
 
 Fetches the 7-day weather forecast for a specific location in Colombia.
 
@@ -44,7 +130,7 @@ Fetches the 7-day weather forecast for a specific location in Colombia.
 **Example Request:**
 
 ```bash
-curl "http://127.0.0.1:8000/weather?latitude=4.6097&longitude=-74.0817&city=Bogota"
+curl "http://127.0.0.1:8000/api/v1/weather?latitude=4.6097&longitude=-74.0817&city=Bogota"
 ```
 
 **Example Response:**
@@ -68,38 +154,9 @@ curl "http://127.0.0.1:8000/weather?latitude=4.6097&longitude=-74.0817&city=Bogo
       "temperatura_max": 17,
       "temperatura_min": 11.2,
       "probabilidad_precipitacion": 85
-    },
-    {
-      "fecha": "2025-10-16",
-      "temperatura_max": 17.6,
-      "temperatura_min": 11.4,
-      "probabilidad_precipitacion": 65
-    },
-    {
-      "fecha": "2025-10-17",
-      "temperatura_max": 17,
-      "temperatura_min": 11.9,
-      "probabilidad_precipitacion": 80
-    },
-    {
-      "fecha": "2025-10-18",
-      "temperatura_max": 17.9,
-      "temperatura_min": 11.9,
-      "probabilidad_precipitacion": 75
-    },
-    {
-      "fecha": "2025-10-19",
-      "temperatura_max": 18,
-      "temperatura_min": 11.7,
-      "probabilidad_precipitacion": 39
-    },
-    {
-      "fecha": "2025-10-20",
-      "temperatura_max": 17.1,
-      "temperatura_min": 11.9,
-      "probabilidad_precipitacion": 63
     }
   ],
   "mensaje_info": "7-day weather forecast for Bogota."
 }
 ```
+

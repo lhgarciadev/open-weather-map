@@ -1,7 +1,7 @@
 import pytest
 import requests
-from fastapi import HTTPException
 
+from app.core.exceptions import APIDataMappingError, OpenMeteoAPIError
 from app.models.weather import WeatherResponse
 from app.services.open_meteo import OpenMeteoService
 
@@ -57,11 +57,10 @@ def test_get_weather_forecast_api_connection_error(mocker):
     mock_get = mocker.patch("app.services.open_meteo.requests.get")
     mock_get.side_effect = requests.exceptions.RequestException("Connection timed out")
 
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(OpenMeteoAPIError) as exc_info:
         service.get_weather_forecast()
 
-    assert exc_info.value.status_code == 500
-    assert "Failed to connect to Open-Meteo API" in exc_info.value.detail
+    assert "Failed to connect to Open-Meteo API" in exc_info.value.message
 
 
 def test_get_weather_forecast_data_mapping_error(mock_open_meteo_response, mocker):
@@ -78,8 +77,7 @@ def test_get_weather_forecast_data_mapping_error(mock_open_meteo_response, mocke
     mock_response.raise_for_status.return_value = None
     mock_get.return_value = mock_response
 
-    with pytest.raises(HTTPException) as exc_info:
+    with pytest.raises(APIDataMappingError) as exc_info:
         service.get_weather_forecast()
 
-    assert exc_info.value.status_code == 500
-    assert "Error in data mapping" in exc_info.value.detail
+    assert "Error in data mapping" in exc_info.value.message

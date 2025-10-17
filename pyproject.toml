@@ -1,7 +1,7 @@
 [project]
 name = "open-weather-map"
 version = "1.0.0"
-description = "Add your description here"
+description = "A simple API to get the 7-day weather forecast for any location in Colombia using the Open-Meteo service."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -22,26 +22,92 @@ dev = [
     "anyio>=4.4.0",
 ]
 
-# ---------- Ruff ----------
+# --- Tool Configuration ---
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-extend-exclude = [".venv", "build", "dist", "*.egg-info"]
+extend-exclude = [".venv", "build", "dist", "*.egg-info", "migrations", ".pytest_cache"]
 
 [tool.ruff.lint]
-# E/F: pep8 + pyflakes | I: isort | UP: pyupgrade | B: bugbear
-select = ["E", "F", "I", "UP", "B"]
+# A curated set of rules for high-quality, modern Python code.
+# E/W: Standard pycodestyle errors/warnings
+# F: Pyflakes (error detection)
+# I: isort (import sorting)
+# UP: pyupgrade (modernize syntax)
+# B: flake8-bugbear (find likely bugs)
+# D: pydocstyle (docstring conventions)
+# S: flake8-bandit (security checks)
+# PTH: flake8-pathlib (use pathlib instead of os.path)
+# C90: mccabe (complexity checking)
+select = ["E", "W", "F", "I", "UP", "B", "D", "S", "PTH", "C90"]
+
+# Ignore rules that are often too noisy for practical development.
+ignore = [
+    "D104",  # Missing docstring in public package
+    "D107",  # Missing docstring in __init__
+]
+
+# Ignore specific rules on a per-file basis.
+[tool.ruff.lint.per-file-ignores]
+"app/__init__.py" = ["F401"]  # Unused imports are common in __init__.py
+"tests/**" = ["D", "S101"]  # Docstrings and asserts are not strictly required in tests.
+
+[tool.ruff.lint.mccabe]
+# Set a reasonable complexity limit to encourage simpler functions.
+max-complexity = 12
+
+[tool.ruff.lint.pydocstyle]
+# Enforce Google-style docstrings for consistency.
+convention = "google"
+
+[tool.ruff.lint.isort]
+# Teach isort to recognize 'app' as a first-party module.
+known-first-party = ["app"]
+combine-as-imports = true
+force-sort-within-sections = true
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
 
-# ---------- Pytest ----------
 [tool.pytest.ini_options]
-addopts = "-vv --cov=app --cov-branch --cov-report=term-missing --cov-fail-under=90"
+# Keep addopts minimal; coverage is configured in [tool.coverage].
+addopts = "-vv --maxfail=1"
 testpaths = ["tests"]
 pythonpath = ["."]
+asyncio_mode = "auto"
+norecursedirs = [".venv", "dist", "build", ".pytest_cache"]
 markers = [
-    "integration: tests de integración que tocan red/IO",
+    "integration: marks tests that perform real network I/O",
 ]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]
+
+[tool.coverage.run]
+# Measure branch coverage in addition to statement coverage.
+branch = true
+# Confine analysis to the main application package.
+source = ["app"]
+
+[tool.coverage.report]
+# Show missing lines in the coverage report.
+show_missing = true
+# Enforce a minimum coverage threshold of 90%.
+fail_under = 90
+
+[tool.mypy]
+# This provides a strict type-checking configuration.
+python_version = "3.12"
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+plugins = []
+mypy_path = ["."]
+exclude = ["tests/"]  # Type checking is not enforced for tests.

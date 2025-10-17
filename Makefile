@@ -1,5 +1,5 @@
-.PHONY: venv install run test test-ci format format-check lint lint-fix \
-        container-lint refactor clean all
+.PHONY: venv install run-dev run-pro test test-ci format format-check lint lint-fix \
+        container-lint refactor clean all free-port docker-build docker-run-dev docker-run-pro
 
 venv:
 	@test -d .venv || uv venv
@@ -15,9 +15,13 @@ install: venv
 		uv pip install -U pytest pytest-cov ruff; \
 	fi
 
-run:
+run-dev:
 	@echo "Starting dev server on http://127.0.0.1:8000"
 	uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+run-pro:
+	@echo "Starting prod server on http://127.0.0.1:8000"
+	ENVIRONMENT=production uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 test:
 	@echo "Running tests (verbose + coverage)"
@@ -58,4 +62,32 @@ clean:
 	rm -rf .venv .pytest_cache .ruff_cache .coverage htmlcov \
 		build dist *.egg-info **/*.egg-info
 
+free-port:
+	@echo "Attempting to free port 8000..."
+	@if command -v lsof > /dev/null; then \
+		PID=$$(sudo lsof -t -i :8000); \
+		if [ -n "$$PID" ]; then \
+			echo "Found process(es) with PID(s): $$PID on port 8000. Killing them..."; \
+			echo "$$PID" | sudo xargs kill -9; \
+			echo "Port 8000 should be free now."; \
+		else \
+			echo "Port 8000 is not currently in use by any identifiable process."; \
+		fi; \
+	else \
+		echo "lsof command not found. Cannot automatically kill the process. Try 'sudo kill -9 $$(sudo lsof -t -i :8000)' manually."; \
+	fi
+
 all: install format lint test
+
+# --- Docker Commands ---
+docker-build:
+	@echo "Building Docker image..."
+	docker build -t open-weather-map .
+
+docker-run-pro:
+	@echo "Running Docker container in production mode..."
+	docker run -p 8000:8000 --rm --name open-weather-map-pro open-weather-map
+
+docker-run-dev:
+	@echo "Running Docker container in development mode with hot-reload..."
+	docker run -p 8000:8000 --rm --name open-weather-map-dev -v ./app:/app/app -e ENVIRONMENT=development open-weather-map uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
