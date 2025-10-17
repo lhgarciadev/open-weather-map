@@ -1,3 +1,4 @@
+
 # Open Weather Map API
 
 This project provides a simple API to get the 7-day weather forecast for any location in Colombia.
@@ -25,32 +26,32 @@ This project is structured following the best practices recommended by FastAPI f
 open-weather-map/
 ├── app/
 │   ├── __init__.py
-│   ├── main.py                    # Crea e instancia la aplicación FastAPI
+│   ├── main.py                    # Creates and initializes the FastAPI application
 │   │
 │   ├── models/                    # Pydantic models (schemas)
 │   │   ├── __init__.py
-│   │   └── weather.py             # Modelos WeatherRequest y WeatherResponse
+│   │   └── weather.py             # WeatherRequest and WeatherResponse models
 │   │
-│   ├── routers/                   # Rutas agrupadas por funcionalidad
+│   ├── routers/                   # Routes grouped by functionality
 │   │   ├── __init__.py
 │   │   └── weather.py             # Endpoint /weather/forecast
 │   │
-│   ├── services/                  # Lógica de negocio o integración externa
+│   ├── services/                  # Business logic or external integration
 │   │   ├── __init__.py
-│   │   └── open_meteo.py          # Cliente HTTP hacia Open-Meteo API
+│   │   └── open_meteo.py          # HTTP client for Open-Meteo API
 │   │
-│   └── core/                      # Infraestructura y base
+│   └── core/                      # Infrastructure and core utilities
 │       ├── __init__.py
-│       ├── config.py              # Configuración (variables de entorno, URLs, etc.)
-│       ├── exceptions.py          # Manejo centralizado de errores
-│       └── logging_config.py      # Configuración de logs
+│       ├── config.py              # Application settings and environment variables
+│       ├── exceptions.py          # Centralized exception handling
+│       └── logging_config.py      # Application-wide logging configuration
 │
 ├── tests/
 │   ├── routers/
-│   │   └── test_weather.py        # Testea el endpoint FastAPI
+│   │   └── test_weather.py        # Tests FastAPI endpoint
 │   ├── services/
-│   │   └── test_open_meteo.py     # Testea la integración con la API externa
-│   └── test_main.py               # Smoke test de la app
+│   │   └── test_open_meteo.py     # Tests external API integration
+│   └── test_main.py               # Smoke test for the app
 ```
 
 ### Component Breakdown
@@ -159,4 +160,3 @@ curl "http://127.0.0.1:8000/api/v1/weather?latitude=4.6097&longitude=-74.0817&ci
   "mensaje_info": "7-day weather forecast for Bogota."
 }
 ```
-
