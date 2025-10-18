@@ -29,9 +29,6 @@ WORKDIR /app
 
 COPY --from=build /app /app
 
-# Set environment to production
-ENV ENVIRONMENT=production
-
 EXPOSE 8000
 
 # -------------------------------

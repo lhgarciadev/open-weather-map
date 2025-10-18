@@ -21,7 +21,7 @@ run-dev:
 
 run-pro:
 	@echo "Starting prod server on http://127.0.0.1:8000"
-	ENVIRONMENT=production uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+	uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 test:
 	@echo "Running tests (verbose + coverage)"
@@ -90,4 +90,4 @@ docker-run-pro:
 
 docker-run-dev:
 	@echo "Running Docker container in development mode with hot-reload..."
-	docker run -p 8000:8000 --rm --name open-weather-map-dev -v ./app:/app/app -e ENVIRONMENT=development open-weather-map uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	docker run -p 8000:8000 --rm --name open-weather-map-dev -v ./app:/app/app -e open-weather-map uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000

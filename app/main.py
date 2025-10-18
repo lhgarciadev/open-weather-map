@@ -5,7 +5,6 @@ import logging
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from app.core.config import get_settings
 from app.core.exceptions import APIDataMappingError, OpenMeteoAPIError
 from app.core.logging_config import setup_logging
 from app.routers import weather
@@ -18,7 +17,6 @@ def create_app() -> FastAPI:
 
     # Get logger
     logger = logging.getLogger(__name__)
-    settings = get_settings()
 
     # Conditionally disable docs
     app_kwargs = {
@@ -28,11 +26,6 @@ def create_app() -> FastAPI:
         ),
         "version": "1.0.0",
     }
-    if settings.ENVIRONMENT == "production":
-        app_kwargs["docs_url"] = None
-        app_kwargs["redoc_url"] = None
-        app_kwargs["openapi_url"] = None
-
     app = FastAPI(**app_kwargs)
 
     @app.exception_handler(OpenMeteoAPIError)
