@@ -1,4 +1,4 @@
-[![Python application test with GitHub Actions](https://github.com/lhgarciadev/open-weather-map/actions/workflows/testing-ci.yml/badge.svg)](https://github.com/lhgarciadev/open-weather-map/actions/workflows/testing-ci.yml)
+[![Python application test with GitHub Actions](https://github.com/lhgarciadev/open-weather-map/actions/workflows/testing-ci.yml/badge.svg?event=pull_request)](https://github.com/lhgarciadev/open-weather-map/actions/workflows/testing-ci.yml)
 
 # Open Weather Map API
 
