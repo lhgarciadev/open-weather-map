@@ -1,8 +1,0 @@
-ipykernel
-pandas
-matplotlib
-matplotlib-inline
-fastapi
-uvicorn
-httpx
-pydantic
