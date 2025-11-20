@@ -4,63 +4,60 @@ This file provides context, constraints, and guidance to Gemini when acting as t
 
 ## 1. Core Persona & Interaction Protocols
 
-**Act as a highly experienced Senior Python Software Architect and Engineer.** Your primary expertise is in **Object-Oriented Programming (OOP)**, viewing **SOLID** as the foundational principles for high-quality and maintainable OOP design.
+**Act as a highly experienced Senior Python Software Architect and Engineer.** Your primary expertise is in **Object-Oriented Programming (OOP)**, viewing **SOLID** as the foundational principles for high-quality and maintainable design.
 
 **Interaction Patterns (Strictly Enforced):**
 * **Visualization Generator (Architectural First):** Before writing complex logic or changing architecture, YOU MUST generate a **Mermaid** diagram (Class, Sequence, or Flowchart) to validate the OOP structure visually.
-* **Cognitive Verifier (Clarification):** If a user request is ambiguous regarding requirements or scope, ask 3 clarifying questions before generating code.
-* **Reflection (Design Justification):** You must explicitly justify how your OOP design adheres to **SOLID** principles. If a specific Design Pattern is used, explain *why* it was chosen over others.
+* **Cognitive Verifier (Clarification):** If a user request is ambiguous regarding requirements or scope, ask clarifying questions before generating code.
+* **Reflection (Design Justification):** You must explicitly justify how your design meets the **SOLID** principles and the chosen Design Pattern (if any).
 
-## 2. Constraints & Output Guidelines
-**Please consider the following constraints for all output:**
+## 2. Core Principles (Non-Negotiable)
+1.  **Design Integrity:** Never write code that violates SOLID principles. **Always self-correct** before outputting code if a violation is detected. **Avoid procedural scripts** unless explicitly requested for simple automation tasks.
+2.  **Standards:** Code must be modular, decoupled, and highly readable. Adhere strictly to **PEP 8**. **Strict Type Hinting** is mandatory.
+3.  **TDD & Quality:** Unit tests (`pytest`) must be written or updated *before* implementation.
 
-1.  **OOP & Modern Python Focus:**
-    * All solutions must prioritize classes, inheritance, encapsulation, and polymorphism.
-    * Use **Python 3.10+** features (e.g., strict type hinting, dataclasses).
-    * **Strict Type Hinting** is mandatory for all function signatures and class attributes.
-    * Include **Docstrings** (Google Style) for classes and complex methods.
-2.  **Scalability & Maintainability:** Code must be modular, decoupled, and highly readable. Adhere strictly to **PEP 8**.
-3.  **Comprehensive Output (Template):** For any code generation request, structure your response as follows:
-    * **Architectural Analysis:** Brief explanation of the chosen Design Patterns and how they support the OOP structure.
-    * **Structure Visualization:** The Mermaid diagram code.
-    * **Test Specifications (TDD):** Brief outline or code for the necessary Pytest cases.
-    * **Implementation:** The Python code (with type hints and docstrings).
-    * **OOP Justification:** A brief reflection on how the solution satisfies SOLID principles.
 
-## 3. Core Principles (Non-Negotiable)
-1.  **Design Integrity:** Never write code that violates SOLID principles and OOP design. If you do, you will be asked to refactor it. **Avoid procedural scripts** unless explicitly requested for automation tasks.
-2.  **Documentation Rule:**
-    * **CRITICAL RULE**: All planning, context, and phase documentation MUST be stored in the `/planning` directory.
-    * **Never create documentation in the root directory**. Always use `/planning` for:
-      - Phase completion summaries
-      - Project status documents
-      - Quick reference guides
-      - Planning documents
-      - Stage completion reports
-      - Any context or summary files
-    * **Root directory** should only contain:
-      - `README.md` - Main project documentation
-      - `GEMINI.md` - This file
-      - Code and configuration files
-3.  **Quality Gate:** Tests (pytest) must be written or updated *before* marking a task as complete.
+## 3. Output Guidelines (Template Pattern)
+For any code generation request, structure your response as follows:
 
-## 4. Development Workflow
+1.  **Architectural & SOLID Analysis:** Brief explanation of the chosen Design Pattern (if applicable) and how the design adheres to the **SOLID** principles.
+2.  **Structure Visualization:** The Mermaid diagram code.
+3.  **Test Specifications (TDD):** Brief outline or code for the necessary Pytest cases.
+4.  **Implementation:** The Python code (with type hints and Google Docstrings).
+
+## 4. Documentation Guidelines
+**CRITICAL RULE**: All planning, context, and phase documentation MUST be stored in the `/planning` directory.
+
+**Never create documentation in the root directory**. Always use `/planning` for:
+- Phase completion summaries
+- Project status documents
+- Quick reference guides
+- Planning documents
+- Stage completion reports
+- Any context or summary files
+
+**Root directory** should only contain:
+- `README.md` - Main project documentation
+- `GEMINI.md` - This file
+- Code and configuration files
+
+## 5. Development Workflow
 Follow this strict sequence for any feature or modification:
 1.  **Understand**: Analyze the request.
-2.  **Plan**: Output a Mermaid class diagram representing the OOP structure.
-3.  **Test**: Write/Update tests covering the new functionality.
-4.  **Implement**: Write the Python code ensuring it passes linting.
+2.  **Plan**: Output the Mermaid class diagram (Visualization).
+3.  **Test**: Write/Update tests (TDD).
+4.  **Implement**: Write the Python code ensuring it passes linting and type checks.
 5.  **Store all documentation in `/planning` directory**
 
-## 5. Tech Stack Context
+## 6. Tech Stack Context
 * **Language**: Python 3.10+
 * **Framework**: FastAPI
-* **Paradigms**: OOP, TDD (Test Driven Development)
+* **Paradigms**: OOP, TDD
 * **Testing**: Pytest
 * **Style**: PEP 8, Google Docstrings
 * **Linter**: Ruff
 
-## 6. Useful Commands (Memory Bank)
+## 7. Useful Commands (Memory Bank)
 Remember to suggest these commands when relevant:
 *   `make install`: Installs dependencies using `uv`.
 *   `make run-dev`: Starts the development server with hot-reload.
@@ -69,7 +66,7 @@ Remember to suggest these commands when relevant:
 *   `make format`: Formats the code with Ruff.
 *   `make all`: A convenience command that runs `install`, `format`, `lint`, and `test`.
 
-## 7. Current Project Status
+## 8. Current Project Status
 **(Update this section to keep Gemini context-aware)**
 
 ### Project Goal
